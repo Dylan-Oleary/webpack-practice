@@ -8,10 +8,13 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     //Entry point
-    entry: "./src/index.js",
+    entry: {
+        "hello-webpack": "./src/hello-webpack.js",
+        "image": "./src/image.js"
+    },
     //Output File - specifies the name of the generated file and path to the directory where it will generate
     output: {
-        filename: "bundle.js",
+        filename: "[name].bundle.js",
         path: path.join(__dirname, "/dist"),
         publicPath: ""
     },
@@ -80,8 +83,21 @@ module.exports = {
             ]
         }), //Clean outpath.path folder (./dist) - removes all of the bundled files from the folder before adding our new bundled files
         new HtmlWebpackPlugin({ //Generate index.html automatically inside of our /dist folder
+            filename: "hello-webpack.html",
+            chunks: [
+                "hello-webpack"
+            ],
             title: "Handlebars template",
-            template: "src/index.hbs",
+            template: "src/page-template.hbs",
+            description: "I can ride my bike with no handlebars!"
+        }),
+        new HtmlWebpackPlugin({ //Generate index.html automatically inside of our /dist folder
+            filename: "image-test.html",
+            chunks: [
+                "image"
+            ],
+            title: "Handlebars template",
+            template: "src/page-template.hbs",
             description: "I can ride my bike with no handlebars!"
         })
     ]

@@ -1,13 +1,14 @@
 import testImage from "./test.png";
+import "./Image.scss";
 
-const addImage = () => {
+const Image = () => {
     const img = document.createElement("img");
     img.alt = "test";
-    img.width = 300;
     img.src = testImage;
+    img.classList.add("image-component")
 
     const body = document.querySelector("body");
     body.appendChild(img);
 };
 
-export default addImage;
+export default Image;

@@ -9,14 +9,24 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     //Entry point
-    entry: "./src/index.js",
+    entry: {
+        "hello-webpack": "./src/hello-webpack.js",
+        "image": "./src/image.js"
+    },
     //Output File - specifies the name of the generated file and path to the directory where it will generate
     output: {
-        filename: "bundle.[contenthash].js", //[contenthash] is for caching purposes. Webpack will change the file name if we make any changes so that when we change our JS files, users download the new file upon load
+        filename: "[name].[contenthash].js", //[name] will check whatever entry it is trying to output and put its name in place of [name]
         path: path.join(__dirname, "/dist"),
         publicPath: ""
     },
-    mode: "production", //Sets the NODE_ENV
+    mode: "production", //Sets the NODE_ENV,
+    optimization: {
+        splitChunks: {
+            chunks: "all", //Load in common dependencies - this will ensure that the user doesn't need to download it each time one of our own JS files change that use the dependency
+            minSize: 7000, //the threshold at which we should bundle common dependencies separately
+            automaticNameDelimiter: "_"
+        }
+    },
     module: {
         rules: [
             //Every time we try to import a file (in this case - an image), Webpack will check if it has a rule for it
@@ -70,7 +80,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({ //extracts CSS into a seperate file
-            filename: "styles.[contenthash].css"
+            filename: "[name].[contenthash].css"
         }),
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: [
@@ -79,9 +89,23 @@ module.exports = {
             ]
         }), //Clean outpath.path folder (./dist) - removes all of the bundled files from the folder before adding our new bundled files
         new HtmlWebpackPlugin({ //Generate index.html automatically inside of our /dist folder
-            title: "Handlebars template",
-            template: "src/index.hbs",
-            description: "I can ride my bike with no handlebars!"
+            filename: "hello-webpack.html",
+            title: "Hello Webpack",
+            template: "src/page-template.hbs",
+            description: "I can ride my bike with no handlebars!",
+            chunks: [
+                "hello-webpack",
+                "vendors~hello-webpack~image"
+            ] //What bundles to load in for this page
+        }),
+        new HtmlWebpackPlugin({
+            filename: "image-test.html",
+            title: "Image test",
+            template: "src/page-template.hbs",
+            description: "Image Testing!",
+            chunks: [
+                "image"
+            ]
         })
     ]
 }
