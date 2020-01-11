@@ -1,0 +1,13 @@
+$font-size: 20px;
+$padding: 2rem;
+
+.hello-webpack-btn {
+    font-size: $font-size;
+    padding: $padding;
+    color: #FFF;
+    background-color: #000;
+}
+
+.hello-webpack-text {
+    color: green;
+}
